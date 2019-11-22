@@ -1,0 +1,15 @@
+extend type Query {
+	getAllClassroom: [Classroom]!
+	getByNumber(number: ID!): Classroom
+}
+
+extend type Mutation {
+	createClassroom(number: ID!, building: String!): Classroom
+	deleteClassroom(number: ID!): Boolean!
+	updateClassroom(number: ID!, building: String!): Classroom
+}
+
+type Classroom {
+	number: ID!
+	building: String!
+}

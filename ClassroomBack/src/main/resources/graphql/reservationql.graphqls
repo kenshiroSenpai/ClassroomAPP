@@ -1,0 +1,17 @@
+extend type Query {
+	getAllReservation: [Reservation]!
+	getReserve(id: ID!): Reservation
+}
+
+extend type Mutation{
+	createReserve(classroomNumber: ID!, startTime: String!, endTime: String!): Reservation
+	updateReserve(idReserve: ID!, classroomNumber: ID!, startTime: String!, endTime: String!): Reservation
+	deleteReserve(idReserve: ID!): Boolean!
+}
+
+type Reservation {
+	idReserve: ID!
+	classroomNumber: Classroom!
+	startTime: String!
+	endTime: String!
+}

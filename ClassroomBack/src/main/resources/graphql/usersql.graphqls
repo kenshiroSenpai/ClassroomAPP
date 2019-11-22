@@ -1,0 +1,17 @@
+extend type Query {
+	getAllUsers: [Users]!
+	getUser(username: ID!): Users
+}
+
+extend type Mutation {
+	createUser(username: ID!, password: String!, privileges: String!, studentsDni: String!): Users
+	deleteUser(username: ID!): Boolean!
+	updateUser(username: ID!, newUsername: ID!, password: String, privileges: String!, studentsDni: String!): Users
+}
+
+type Users {
+	username: ID!
+	password: String!
+	privileges: String!
+	studentsDni: Students	
+}

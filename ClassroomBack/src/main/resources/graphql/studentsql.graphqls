@@ -1,0 +1,20 @@
+extend type Query {
+	getAllStudents: [Students]!
+	getByDni(dni: ID!): Students
+}
+
+extend type Mutation {
+	createStudent(dni: ID!, name: String!, firstSurname: String!, secondSurname: String, reserveClassroom: Boolean!, dateOfBirth: String!): Students
+	deleteStudent(dni: ID!): Boolean!
+	updateStudent(dni: ID!, name: String!, firstSurname: String!, secondSurname: String, reserveClassroom: Boolean!, dateOfBirth: String!): Students
+}
+
+
+type Students {
+	dni: ID!
+	name: String!
+	firstSurname: String!
+	secondSurname: String
+	reserveClassroom: Boolean!
+	dateOfBirth: String!
+}
