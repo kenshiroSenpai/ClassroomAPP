@@ -1,6 +1,9 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="center">Classrooom: {{classroomReserve.number}} {{classroomReserve.building}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title class="padTop">Classrooom: {{classroomReserve.number}} {{classroomReserve.building}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,7 +12,7 @@
   <ion-list>
     <ion-item>
       <ion-label position="floating">DNI responsible: </ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input [(ngModel)]="dniResponsible" type="text"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">email: </ion-label>
@@ -17,9 +20,23 @@
     </ion-item>
     <ion-item>
       <ion-label>Other's DNI: </ion-label>
-      <ion-input type="text"></ion-input>
-      <ion-button>ACCEPT</ion-button>
+      <ion-input [(ngModel)]="otherDni" type="text"></ion-input>
+      <!-- Show button if input have a value. -->
+      <span *ngIf="otherDni != ''">
+        <ion-button (click)="loadArrayOthersDni()">ACCEPT</ion-button>
+      </span>
     </ion-item>
+    <!-- check if the arrayOthersDni contain one or more values, if have one or more values, then show dni -->
+    <ion-row *ngIf="arrayOthersDni.length > 0">
+      <ion-list *ngFor="let dni of arrayOthersDni">
+        <ion-col>
+          <span *ngIf="dni !== length">
+            <ion-label>{{dni}} </ion-label>
+            <ion-icon name="trash" slot="end" (click)="deleteOtherDni(dni)"></ion-icon>
+          </span>
+        </ion-col>
+      </ion-list>
+    </ion-row>
     <ion-item>
       <ion-label>Select start date...</ion-label>
       <ion-datetime [(ngModel)]="startDate" displayFormat="YYYY-MM-DD"></ion-datetime>
@@ -36,7 +53,7 @@
       <ion-label>Select end time...</ion-label>
       <ion-datetime [(ngModel)]="endTime" displayFormat="HH:mm"></ion-datetime>
     </ion-item>
-    <ion-button (click)="createReserve()">CREATE RESERVE</ion-button>
-    <ion-button (click)="show()">SHOW</ion-button>
+    <ion-button (click)="createReserveWithRole()">CREATE RESERVE</ion-button>
+    <ion-button (click)="validateDni()">VALIDATE</ion-button>
   </ion-list>
 </ion-content>

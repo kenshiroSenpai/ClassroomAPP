@@ -22,8 +22,8 @@ export class UserInfoPage implements OnInit {
   constructor(private router: Router, private apollo: Apollo) { }
 
   async ngOnInit() {
+    await this.loadData();
     document.getElementById("showUsers").style.display = 'none';
-    this.loadData();
   }
 
   async loadData() {
