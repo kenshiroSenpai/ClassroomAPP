@@ -26,6 +26,10 @@ public class UsersQuery implements GraphQLQueryResolver{
 		return userService.getUser(username);
 	}
 	
+	@Transactional(readOnly = true)
+	public boolean login(){
+		return userService.login();
+	}
 	
 
 }

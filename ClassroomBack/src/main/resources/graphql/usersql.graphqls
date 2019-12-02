@@ -1,12 +1,13 @@
 extend type Query {
 	getAllUsers: [Users]!
 	getUser(username: ID!): Users
+	login: Boolean!
 }
 
 extend type Mutation {
 	createUser(username: ID!, password: String!, privileges: String!, studentsDni: String!): Users
 	deleteUser(username: ID!): Boolean!
-	updateUser(username: ID!, newUsername: ID!, password: String, privileges: String!, studentsDni: String!): Users
+	updateUser(username: ID!, newUsername: ID!, password: String!, privileges: String!, studentsDni: String!): Boolean!
 }
 
 type Users {

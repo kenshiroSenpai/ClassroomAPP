@@ -33,7 +33,6 @@ public class JpaUserDetailsService implements UserDetailsService {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		
 		if(user.getPrivileges()!=null) {
-			System.out.println("entro");
 			authorities.add(new SimpleGrantedAuthority(user.getPrivileges()));
 		}
 		

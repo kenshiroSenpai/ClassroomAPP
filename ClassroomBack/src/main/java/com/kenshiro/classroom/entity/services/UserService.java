@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.kenshiro.classroom.entity.dao.IStudentsDao;
 import com.kenshiro.classroom.entity.dao.IUsersDao;
+import com.kenshiro.classroom.entity.models.Students;
 import com.kenshiro.classroom.entity.models.Users;
 
 @Service
@@ -64,18 +65,18 @@ public class UserService implements IUserService {
 
 	@Override
 	@PreAuthorize("hasRole('ADMIN')")
-	public Users updateUser(String username, String newUsername, String password, String privileges,
+	public boolean updateUser(String username, String newUsername, String password, String privileges,
 			String studentsDni) {
 		Optional<Users> user = userDao.findById(username);
-		Users newUser = new Users();
 		user.ifPresent(userFound -> {
-			String oldPrivileges = userFound.getPrivileges();
+			final Users newUser = new Users();
+			String oldPrivileges = userFound.getPrivileges().substring(5);
 			String oldPassword = userFound.getPassword();
+			Students oldStudent = userFound.getStudentsDni();
 			userDao.deleteById(username);
 			newUser.setUser(newUsername);
 			if (password.isEmpty()) {
-				String hashedPassword = passwordEncoder(oldPassword);
-				newUser.setPassword(hashedPassword);
+				newUser.setPassword(oldPassword);
 			} else {
 				String hashedPassword = passwordEncoder(password);
 				newUser.setPassword(hashedPassword);
@@ -85,17 +86,24 @@ public class UserService implements IUserService {
 			} else {
 				newUser.setPrivileges(privileges);
 			}
-		});
-		if (studentsDni.isEmpty()) {
-			newUser.setStudentsDni(null);
-		} else {
-			studentsDao.findById(studentsDni).ifPresent(studentsFound -> {
-				newUser.setStudentsDni(studentsFound);
-			});
-		}
-		userDao.save(newUser);
-		return newUser;
+			if (studentsDni.isEmpty()) {
+				newUser.setStudentsDni(oldStudent);
+			} else {
+				studentsDao.findById(studentsDni).ifPresent(studentsFound -> {
+					newUser.setStudentsDni(studentsFound);
+				});
+			}
+			userDao.save(newUser);
+		});	
+		return true;
 	}
+	
+	@Override
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+	public boolean login() {
+		return true;
+	}
+	
 	
 	//Password Encoding using Bcrypt Encoder
 	private String passwordEncoder(String password) {
@@ -103,4 +111,5 @@ public class UserService implements IUserService {
 		String hashedPassword = passwordEncoder.encode(password);
 		return hashedPassword;
 	}
+
 }
