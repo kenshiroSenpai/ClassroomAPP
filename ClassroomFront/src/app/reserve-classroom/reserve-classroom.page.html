@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="center">Classrooom: {{classroomReserve.number}} {{classroomReserve.building}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h5 class="center">Fill the form to reserve classroom</h5>
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">DNI responsible: </ion-label>
+      <ion-input type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">email: </ion-label>
+      <ion-input type="email"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Other's DNI: </ion-label>
+      <ion-input type="text"></ion-input>
+      <ion-button>ACCEPT</ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Select start date...</ion-label>
+      <ion-datetime [(ngModel)]="startDate" displayFormat="YYYY-MM-DD"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Select start time...</ion-label>
+      <ion-datetime [(ngModel)]="startTime" displayFormat="HH:mm"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Select end date...</ion-label>
+      <ion-datetime [(ngModel)]="endDate" displayFormat="YYYY-MM-DD"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Select end time...</ion-label>
+      <ion-datetime [(ngModel)]="endTime" displayFormat="HH:mm"></ion-datetime>
+    </ion-item>
+    <ion-button (click)="createReserve()">CREATE RESERVE</ion-button>
+    <ion-button (click)="show()">SHOW</ion-button>
+  </ion-list>
+</ion-content>

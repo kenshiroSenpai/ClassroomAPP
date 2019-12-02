@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Administration</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngFor="let user of users">
+    <ion-item>
+      <ion-label position="fixed">Username: </ion-label>
+      <ion-label>{{user.username}}</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Password: </ion-label>
+      <ion-input type="password" value="hidden"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed">Privileges: </ion-label>
+      <ion-label>{{user.privileges}}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="user.studentsDni == null">
+      <ion-label position="fixed">dni: </ion-label>
+      <ion-label>{{user.studentsDni}}</ion-label>
+    </ion-item>
+    <ion-item *ngIf="user.studentsDni != null">
+      <ion-label position="fixed">dni: </ion-label>
+      <ion-label>{{user.studentsDni.dni}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

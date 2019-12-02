@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title size="large">Classrooms</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar showCancelButton="focus" (ioninput)="filterList($event)"></ion-searchbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col>Number</ion-col>
+      <ion-col>Building</ion-col>
+    </ion-row>
+    <ion-list *ngFor="let classroom of classrooms">
+      <ion-row>
+        <ion-col>
+          <ion-item lines="full" (click)="goToClassroom(classroom)">
+            <ion-label>{{classroom.number}}</ion-label>
+            <ion-label>{{classroom.building}}</ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-list>
+  </ion-grid>
+</ion-content>

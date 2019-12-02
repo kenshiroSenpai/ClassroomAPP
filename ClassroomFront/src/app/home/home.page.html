@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToUserInfo()">
+        <ion-icon slot="icon-only" name="contact"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      Classroom App
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-padding">
+    <ion-grid>
+      <ion-row class="padButtons">
+        <ion-col>
+          <ion-button expand="full" (click)="goToShowClassroom()">Show Classroom</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="padButtons">
+        <ion-col>
+          <ion-button expand="full" (click)="goToMyReserve()">My Reserve</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="padButtons">
+        <ion-col>
+          <ion-button expand="full" (click)="goToLogin()">Log out</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+
+  </div>
+</ion-content>
