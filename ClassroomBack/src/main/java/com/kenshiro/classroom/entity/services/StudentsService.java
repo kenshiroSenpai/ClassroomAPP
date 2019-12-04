@@ -23,7 +23,6 @@ public class StudentsService implements IStudentsService{
 	}
 
 	@Override
-	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public Optional<Students> getByDni(String dni) {
 		return studentsDao.findById(dni);
 	}

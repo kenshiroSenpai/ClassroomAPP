@@ -18,24 +18,34 @@ export class GraphQLModule {
     studentsDni: null
   }
   private header: HttpHeaders;
-  
+
   constructor(private apollo: Apollo, private httpLink: HttpLink) {
   }
 
-  async config(){
+  async config() {
 
     this.header = new HttpHeaders();
     this.header = this.header.append("Authorization", "Basic " + btoa(this.user.username + ":" + this.user.password));
     this.header = this.header.append("Content-Type", "application/json");
-    
-    //this.header = this.header.append("Access-Control-Request-Headers", "*");
+
     this.apollo.removeClient();
     this.apollo.create({
       link: this.httpLink.create({
         uri: "http://localhost:8080/graphql",
         headers: this.header
       }),
-      
+
+      cache: new InMemoryCache()
+    });
+  }
+
+  async configRegister() {
+    this.apollo.removeClient();
+    this.apollo.create({
+      link: this.httpLink.create({
+        uri: "http://localhost:8080/graphql"
+      }),
+
       cache: new InMemoryCache()
     });
   }

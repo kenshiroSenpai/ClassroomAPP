@@ -27,6 +27,10 @@ const routes: Routes = [
   {
     path: 'admin-user',
     loadChildren: () => import('./admin-user/admin-user.module').then( m => m.AdminUserPageModule)
+  },
+  {
+    path: 'register-user',
+    loadChildren: () => import('./register-user/register-user.module').then( m => m.RegisterUserPageModule)
   }
 ];
 

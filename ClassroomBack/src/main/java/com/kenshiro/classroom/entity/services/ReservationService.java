@@ -86,7 +86,7 @@ public class ReservationService implements IReservationService {
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 	public boolean deleteReserve(long idReserve) {
 		try {
 			reservationDao.deleteById(idReserve);

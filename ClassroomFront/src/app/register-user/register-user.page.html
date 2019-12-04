@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <form [formGroup]="formRegister">
+      <ion-item>
+        <ion-label position="floating">Name</ion-label>
+        <ion-input formControlName="name" type="text"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class='form-text error'
+        *ngIf="!formRegister.controls.name.valid  && (formRegister.controls.name.dirty)">
+        <p>Please enter a valid name.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Username</ion-label>
+        <ion-input formControlName="username" type="text"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class='form-text error'
+        *ngIf="!formRegister.controls.username.valid  && (formRegister.controls.username.dirty)">
+        <p>Please enter a valid username.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">First Surname</ion-label>
+        <ion-input formControlName="firstSurname" type="text"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class='form-text error'
+        *ngIf="!formRegister.controls.firstSurname.valid  && (formRegister.controls.firstSurname.dirty)">
+        <p>Please enter a valid first surname.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Second Surname</ion-label>
+        <ion-input formControlName="secondSurname" type="text"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class='form-text error'
+        *ngIf="!formRegister.controls.secondSurname.valid  && (formRegister.controls.secondSurname.dirty)">
+        <p>Please enter a valid second surname.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Dni</ion-label>
+        <ion-input formControlName="dni" type="text"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class='form-text error'
+        *ngIf="!formRegister.controls.dni.valid  && (formRegister.controls.dni.dirty)">
+        <p>Please enter a valid dni.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input formControlName="password" type="password"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class='form-text error'
+        *ngIf="!formRegister.controls.password.valid  && (formRegister.controls.password.dirty)">
+        <p>Please enter a valid password.</p>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Confirm password</ion-label>
+        <ion-input formControlName="confirmPassword" type="password"></ion-input>
+      </ion-item>
+      <ion-item lines="none" class='form-text error'
+        *ngIf="formRegister.controls.confirmPassword.touched && formRegister.hasError('mismatchedPasswords') && formRegister.controls.password.valid">
+        <ion-label>Passwords do not match</ion-label>
+      </ion-item>
+    </form>
+  </ion-list>
+
+  <ion-button (click)="validateStudent()" [disabled]="!formRegister.valid">CREATE USER</ion-button>
+</ion-content>

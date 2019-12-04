@@ -52,6 +52,10 @@ export class LoginPage implements OnInit {
     return isLogin;
   }
 
+  async registerUser(){
+    this.router.navigate(['/register-user']);
+  }
+
   async presentToastSuccess() {
     const toast = await this.toastController.create({
       message: `Welcome ${this.username.toLowerCase()}`,

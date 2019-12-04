@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Classroom } from '../interfaces/classroom';
 import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { Role } from '../interfaces/role';
 import gql from 'graphql-tag';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-reserve-classroom',
@@ -22,7 +22,7 @@ export class ReserveClassroomPage implements OnInit {
   endTime: String;
   dniTemp: String;
 
-  constructor(private apollo: Apollo, private router: Router) { }
+  constructor(private apollo: Apollo, private router: Router, private toastController: ToastController) { }
 
   ngOnInit() {
     this.loadData();
@@ -36,14 +36,24 @@ export class ReserveClassroomPage implements OnInit {
 
   //load dni in array of dni.
   async loadArrayOthersDni() {
-    if (this.arrayOthersDni.length < 1) {
-      this.arrayOthersDni[this.arrayOthersDni.length] = this.otherDni
-    } else {
-      this.arrayOthersDni[this.arrayOthersDni.length + 1] = this.otherDni
+    try {
+      await this.validateDni(this.otherDni);
+      if (this.otherDni !== this.dniResponsible) {
+        if (this.arrayOthersDni.length < 1) {
+          this.arrayOthersDni[this.arrayOthersDni.length] = this.otherDni
+        } else {
+          this.arrayOthersDni[this.arrayOthersDni.length + 1] = this.otherDni
+        }
+      } else {
+        console.log("error dni duplicate");
+      }
+    } catch (error) {
+      console.log("no exist dni.");
     }
+
   }
 
-  async validateDni() {
+  async validateDni(dni: String) {
     const getByDni = gql`
     query getByDni($dni: ID!){
       getByDni(dni: $dni){
@@ -56,24 +66,20 @@ export class ReserveClassroomPage implements OnInit {
       }
   }
   `;
-
-  console.log(this.dniResponsible);
-  
     const query = this.apollo.watchQuery<any>({
       query: getByDni,
       variables: {
-        dni: this.dniResponsible
+        dni: dni
       }
     });
 
     query.valueChanges.subscribe(result => {
-      if(result.data.getByDni === null){
+      if (result.data.getByDni === null) {
         throw "Error";
       }
       console.log("bueno");
     }, error => {
-      console.log("malo");
-
+      console.log("validate dni: " + error);
     });
   }
 
@@ -83,30 +89,8 @@ export class ReserveClassroomPage implements OnInit {
     this.arrayOthersDni = result;
   }
 
-  async loadStudentsWithResposible() {
-    let arrayStudentDniWithResponsible: Array<Role> = [];
-
-    //student that have the responsability.
-    let studentDniWithResponsible: Role = {
-      studentDni: this.dniResponsible,
-      isResponsible: true
-    };
-    arrayStudentDniWithResponsible.push(studentDniWithResponsible);
-
-    //student that don't have the responsability.
-    for (let dni of this.arrayOthersDni) {
-      let studentDniWithoutResponsible: Role = {
-        studentDni: "",
-        isResponsible: false
-      };
-      if (dni !== undefined) {
-        studentDniWithoutResponsible.studentDni = dni;
-        arrayStudentDniWithResponsible.push(studentDniWithoutResponsible)
-      }
-    }
-  }
-
   async createReserveWithRole() {
+    this.validateDni(this.dniResponsible);
     //Format date and time.
     const startDateFormat = this.startDate.split("T");
     const endDateFormat = this.endDate.split("T");
@@ -134,13 +118,14 @@ export class ReserveClassroomPage implements OnInit {
       }
     }).subscribe(({ data }) => {
       this.createRole(data.createReserve.idReserve);
+      this.router.navigate(['/home']);
+      this.presentToastSuccess();
     }, error => {
       console.log(error);
     });
   }
 
   async createRole(id: String) {
-
     const createRole = gql`
     mutation createRole($reserveId: ID!, $responsible: Boolean!, $studentDni: ID!){
       createRole(reserveId: $reserveId, responsible: $responsible, studentDni: $studentDni){
@@ -163,7 +148,7 @@ export class ReserveClassroomPage implements OnInit {
       }
     }).subscribe(({ data }) => {
     }, error => {
-      console.log(error);
+      console.log("create role: " + error);
     });
 
     for (let dni of this.arrayOthersDni) {
@@ -181,5 +166,13 @@ export class ReserveClassroomPage implements OnInit {
         });
       }
     }
+  }
+
+  async presentToastSuccess() {
+    const toast = await this.toastController.create({
+      message: `Done!`,
+      duration: 1500
+    });
+    toast.present();
   }
 }

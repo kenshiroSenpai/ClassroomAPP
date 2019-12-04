@@ -20,7 +20,13 @@ export class HomePage {
   }
 
   async goToMyReserve(){
-    this.router.navigate(['/my-reserve']);
+    this.userInfo = this.graphQLModule.user;
+    let navigationExtras: NavigationExtras = {
+      state:{
+        userInfo: this.userInfo
+      }
+    }
+    this.router.navigate(['/my-reserve'], navigationExtras);
   }
 
   async goToLogin(){
