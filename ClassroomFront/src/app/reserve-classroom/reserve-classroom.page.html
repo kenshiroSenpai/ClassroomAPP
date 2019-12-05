@@ -15,15 +15,11 @@
       <ion-input [(ngModel)]="dniResponsible" type="text"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="floating">email: </ion-label>
-      <ion-input type="email"></ion-input>
-    </ion-item>
-    <ion-item>
       <ion-label>Other's DNI: </ion-label>
       <ion-input [(ngModel)]="otherDni" type="text"></ion-input>
       <!-- Show button if input have a value. -->
       <span *ngIf="otherDni != ''">
-        <ion-button (click)="loadArrayOthersDni()">ACCEPT</ion-button>
+        <ion-button (click)="loadOthersDni()">ACCEPT</ion-button>
       </span>
     </ion-item>
     <!-- check if the arrayOthersDni contain one or more values, if have one or more values, then show dni -->
@@ -53,6 +49,6 @@
       <ion-label>Select end time...</ion-label>
       <ion-datetime [(ngModel)]="endTime" displayFormat="HH:mm"></ion-datetime>
     </ion-item>
-    <ion-button (click)="createReserveWithRole()">CREATE RESERVE</ion-button>
+    <ion-button (click)="createReserve()">CREATE RESERVE</ion-button>
   </ion-list>
 </ion-content>

@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { AdminUserPageRoutingModule } from './admin-user-routing.module';
-
 import { AdminUserPage } from './admin-user.page';
 
 @NgModule({

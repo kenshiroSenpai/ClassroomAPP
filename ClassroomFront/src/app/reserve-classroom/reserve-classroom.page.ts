@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { ToastController } from '@ionic/angular';
+import { Observable, of, throwError } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reserve-classroom',
@@ -13,7 +15,7 @@ import { ToastController } from '@ionic/angular';
 export class ReserveClassroomPage implements OnInit {
 
   classroomReserve: Classroom;
-  dniResponsible: string;
+  dniResponsible: String;
   otherDni: String = "";
   arrayOthersDni: Array<String> = [];
   startDate: String;
@@ -34,26 +36,45 @@ export class ReserveClassroomPage implements OnInit {
     }
   }
 
-  //load dni in array of dni.
-  async loadArrayOthersDni() {
-    try {
-      await this.validateDni(this.otherDni);
-      if (this.otherDni !== this.dniResponsible) {
-        if (this.arrayOthersDni.length < 1) {
-          this.arrayOthersDni[this.arrayOthersDni.length] = this.otherDni
-        } else {
-          this.arrayOthersDni[this.arrayOthersDni.length + 1] = this.otherDni
-        }
-      } else {
-        console.log("error dni duplicate");
-      }
-    } catch (error) {
-      console.log("no exist dni.");
-    }
-
+  loadOthersDni() {
+    this.validateOtherDni(this.otherDni)
   }
 
-  async validateDni(dni: String) {
+  createReserve() {
+    this.validateReserve(this.dniResponsible);
+  }
+
+  loadArrayOthersDni() {
+    if (this.otherDni !== this.dniResponsible) {
+      if (this.arrayOthersDni.length < 1) {
+        this.arrayOthersDni[this.arrayOthersDni.length] = this.otherDni
+      } else {
+        this.arrayOthersDni[this.arrayOthersDni.length + 1] = this.otherDni
+      }
+    } else {
+      this.presentToast(`dni duplicate.`);
+    }
+  }
+
+  async validateOtherDni(dni: String) {
+    this.observableDni(dni).subscribe((v) => {
+      this.loadArrayOthersDni();
+    },
+      (error) => {
+        this.presentToast(`dni ${this.otherDni} not exist or bad syntax.`);
+      });
+  }
+
+  async validateReserve(dni: String) {
+    this.observableDni(dni).subscribe((v) => {
+      this.createReserveWithRole();
+    },
+      (error) => {
+        this.presentToast(`dni ${this.otherDni} not exist or bad syntax.`);
+      });
+  }
+
+  observableDni(dni: String): Observable<any> {
     const getByDni = gql`
     query getByDni($dni: ID!){
       getByDni(dni: $dni){
@@ -72,15 +93,9 @@ export class ReserveClassroomPage implements OnInit {
         dni: dni
       }
     });
-
-    query.valueChanges.subscribe(result => {
-      if (result.data.getByDni === null) {
-        throw "Error";
-      }
-      console.log("bueno");
-    }, error => {
-      console.log("validate dni: " + error);
-    });
+    return query.valueChanges.pipe(
+      mergeMap((v) => v.data.getByDni === null ? throwError('v is null') : of(v))
+    );
   }
 
   //delete one by one elements in array of dni.
@@ -90,7 +105,6 @@ export class ReserveClassroomPage implements OnInit {
   }
 
   async createReserveWithRole() {
-    this.validateDni(this.dniResponsible);
     //Format date and time.
     const startDateFormat = this.startDate.split("T");
     const endDateFormat = this.endDate.split("T");
@@ -119,7 +133,7 @@ export class ReserveClassroomPage implements OnInit {
     }).subscribe(({ data }) => {
       this.createRole(data.createReserve.idReserve);
       this.router.navigate(['/home']);
-      this.presentToastSuccess();
+      this.presentToast(`Done!`);
     }, error => {
       console.log(error);
     });
@@ -168,9 +182,9 @@ export class ReserveClassroomPage implements OnInit {
     }
   }
 
-  async presentToastSuccess() {
+  async presentToast(message: string) {
     const toast = await this.toastController.create({
-      message: `Done!`,
+      message: message,
       duration: 1500
     });
     toast.present();

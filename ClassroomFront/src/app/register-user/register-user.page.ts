@@ -20,7 +20,7 @@ export class RegisterUserPage {
 
     this.formRegister = this.formBuilder.group({
       name: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+'), Validators.required])],
-      username: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+'), Validators.required])],
+      username: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+[0-9]*'), Validators.required])],
       firstSurname: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+'), Validators.required])],
       secondSurname: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+')])],
       dni: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[0-9]{8}[a-zA-z]{1}'), Validators.required])],

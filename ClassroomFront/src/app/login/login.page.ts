@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
 import { GraphQLModule } from '../graphql.module'
 import { Router } from '@angular/router';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
 
 @Component({
@@ -16,8 +17,14 @@ export class LoginPage implements OnInit {
   username: string = "";
   password: string = "";
   login: Boolean;
+  formLogin: FormGroup;
 
-  constructor(private apollo: Apollo, private graphQLModule: GraphQLModule, private router: Router, private toastController: ToastController) { }
+  constructor(private apollo: Apollo, private graphQLModule: GraphQLModule, private router: Router, private toastController: ToastController, private formBuilder: FormBuilder) {
+    this.formLogin = this.formBuilder.group({
+      username: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+[0-9]*'), Validators.required])],
+      password: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(16), Validators.required])],
+    });
+   }
 
   ngOnInit() {
   }
@@ -25,8 +32,8 @@ export class LoginPage implements OnInit {
   async loginUser() {
     
     let isLogin: any;
-    this.graphQLModule.user.username = this.username.toLowerCase();
-    this.graphQLModule.user.password = this.password
+    this.graphQLModule.user.username = this.getUsername().toLowerCase();
+    this.graphQLModule.user.password = this.getPassword();
     this.graphQLModule.config();
 
     const login = gql`
@@ -41,13 +48,15 @@ export class LoginPage implements OnInit {
     query.valueChanges.subscribe(result => {
       isLogin = result.data.login;
       this.router.navigate(['/home']);
-      this.presentToastSuccess();   
-      this.username = "";
-      this.password = "";
+      this.presentToast(`Welcome ${this.username.toLowerCase()}`);   
+      this.formLogin.setValue({
+        username: "",
+        password: ""
+      });
     },
     error =>{
     isLogin = false;
-    this.presentToastFail();
+    this.presentToast(`Bad username or password, please try again.`);
     });
     return isLogin;
   }
@@ -56,20 +65,20 @@ export class LoginPage implements OnInit {
     this.router.navigate(['/register-user']);
   }
 
-  async presentToastSuccess() {
+  async presentToast(message: string) {
     const toast = await this.toastController.create({
-      message: `Welcome ${this.username.toLowerCase()}`,
+      message: message,
       duration: 2000
     });
     toast.present();
   }
 
-  async presentToastFail() {
-    const toast = await this.toastController.create({
-      message: `Bad username or password, please try again.`,
-      duration: 2000
-    });
-    toast.present();
+  getUsername() {
+    return this.formLogin.value['username'];
+  }
+
+  getPassword() {
+    return this.formLogin.value['password'];
   }
 
 }

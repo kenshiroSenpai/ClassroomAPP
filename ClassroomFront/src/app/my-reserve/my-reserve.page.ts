@@ -12,12 +12,13 @@ import { ToastController, AlertController } from '@ionic/angular';
 })
 export class MyReservePage implements OnInit {
 
-  constructor(private apollo: Apollo, private router: Router, private alertController: AlertController) { }
+  constructor(private apollo: Apollo, private router: Router, private alertController: AlertController, private toastController: ToastController) { }
 
   myRole: Array<Role> = [];
+  username: String;
 
   ngOnInit() {
-    this.loadDni();
+    this.loadUsername();
   }
 
   async loadReserve(dniUser: String) {
@@ -52,11 +53,14 @@ export class MyReservePage implements OnInit {
     });
   }
 
-  async loadDni() {
-    let username: String;
+  async loadUsername() {
     if (this.router.getCurrentNavigation().extras.state) {
-      username = this.router.getCurrentNavigation().extras.state.userInfo.username;
+      this.username = this.router.getCurrentNavigation().extras.state.userInfo.username;
     }
+    this.loadDni();
+  }
+
+  async loadDni() {
 
     const getUser = gql`
     query getUser($username: ID!){
@@ -75,7 +79,7 @@ export class MyReservePage implements OnInit {
       query: getUser,
       fetchPolicy: "network-only",
       variables: {
-        username: username
+        username: this.username
       }
     });
     query.valueChanges.subscribe(result => {
@@ -98,7 +102,7 @@ export class MyReservePage implements OnInit {
     }
     `;
     console.log(id);
-    
+
     this.apollo.mutate<any>({
       mutation: deleteReserve,
       fetchPolicy: "no-cache",
@@ -106,7 +110,8 @@ export class MyReservePage implements OnInit {
         idReserve: id
       }
     }).subscribe(({ data }) => {
-      console.log("donete");
+      this.presentToastSuccess();
+      this.loadDni();
     }, error => {
       console.log(error);
     });
@@ -121,7 +126,7 @@ export class MyReservePage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           cssClass: 'secondary',
-          handler: () => {}
+          handler: () => { }
         }, {
           text: 'Accept',
           handler: () => {
@@ -133,8 +138,16 @@ export class MyReservePage implements OnInit {
     await alert.present();
   }
 
-    async goToReserveClassroom(){
-      this.router.navigate(['/classroom']);
-    }
-
+  async presentToastSuccess() {
+    const toast = await this.toastController.create({
+      message: `Done!`,
+      duration: 1000
+    });
+    toast.present();
   }
+
+  async goToReserveClassroom() {
+    this.router.navigate(['/classroom']);
+  }
+
+}

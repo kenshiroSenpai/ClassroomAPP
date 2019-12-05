@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { Users } from '../interfaces/users';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
@@ -23,7 +23,6 @@ export class UserInfoPage implements OnInit {
 
   async ngOnInit() {
     await this.loadData();
-    document.getElementById("showUsers").style.display = 'none';
   }
 
   async loadData() {
@@ -51,13 +50,15 @@ export class UserInfoPage implements OnInit {
     });
     query.valueChanges.subscribe(result => {
       this.user = result.data.getUser;
-      if (this.user.privileges === "ROLE_ADMIN") {
-        document.getElementById("showUsers").style.display = 'block';
-      }
     });
   }
 
-  async goToAdminUser(){
-    this.router.navigate(['admin-user']);
+  async goToAdminUser(){;
+    let navigationExtras: NavigationExtras = {
+      state:{
+        username: this.username
+      }
+    }
+    this.router.navigate(['admin-user'], navigationExtras);
   }
 }

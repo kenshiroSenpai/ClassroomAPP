@@ -29,6 +29,7 @@
       <ion-label position="fixed">dni: </ion-label>
       <ion-label>{{user.studentsDni.dni}}</ion-label>
     </ion-item>
+    <ion-button color="danger" (click)="presentAlertConfirm(user.username)">DELETE</ion-button>
+    <ion-button color="tertiary" (click)="goToUpdateUserInfo(user)">UPDATE</ion-button>
   </ion-list>
-
 </ion-content>

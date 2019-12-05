@@ -46,7 +46,7 @@
       <ion-col>empty</ion-col>
     </ion-row>
 
-    <ion-row>
+    <ion-row *ngIf="user.privileges==='ROLE_ADMIN'">
       <ion-button id="showUsers" (click)="goToAdminUser()">SHOW USERS</ion-button>
     </ion-row>
     
