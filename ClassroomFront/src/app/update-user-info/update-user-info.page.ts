@@ -19,19 +19,17 @@ export class UpdateUserInfoPage implements OnInit {
     privileges: "",
     studentsDni: null
   };
-  dni: String;
+  privileges: String;
   formAdmin: FormGroup;
-  oldUsername: String;
-  username: String;
 
   constructor(private apollo: Apollo, private toastController: ToastController,
     private alertController: AlertController, private router: Router, private formBuilder: FormBuilder) {
 
     this.formAdmin = this.formBuilder.group({
-      username: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+[0-9]*')])],
-      privileges: [''],
+      username: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+[0-9]*'), Validators.required])],
+      privileges: ['', Validators.required],
       dni: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[0-9]{8}[a-zA-z]{1}')])],
-      password: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(16)])]
+      password: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(16) , Validators.required])]
     });
 
   }
@@ -43,41 +41,42 @@ export class UpdateUserInfoPage implements OnInit {
   async loadData() {
     if (this.router.getCurrentNavigation().extras.state) {
       this.user = this.router.getCurrentNavigation().extras.state.user;
+      this.privileges = "";
     }
   }
 
   async updateUser(user: Users, newUsername: String) {
+    let dni: String = "";
     const updateUser = gql`
     mutation updateUser($username: ID!, $newUsername: ID!, $password: String!, $privileges: String!, $studentsDni: String!){
       updateUser(username: $username, newUsername: $newUsername, password: $password, privileges: $privileges, studentsDni: $studentsDni)
     }
     `;
-    if(newUsername === ""){
-
-    }
     console.log(user);
     console.log(newUsername);
-    
-    
-    if (this.username !== user.username) {
-      this.apollo.mutate<any>({
-        mutation: updateUser,
-        fetchPolicy: "no-cache",
-        variables: {
-          username: user.username,
-          newUsername: newUsername,
-          password: user.password,
-          studentsDni: user.studentsDni
-        }
-      }).subscribe(({ data }) => {
-        this.presentToast("Updated correctly!");
-        this.router.navigate(['/admin-user']);
-      }, error => {
-        console.log(error);
-      });
-    } else {
-      this.presentToast("This user is active!");
+    if(this.formAdmin.value['dni'] !== ""){
+      dni = this.formAdmin.value['dni']
     }
+    if(user.username === ""){
+      user.username = this.user.username;
+    }
+    console.log(dni);
+    
+    this.apollo.mutate<any>({
+      mutation: updateUser,
+      fetchPolicy: "no-cache",
+      variables: {
+        username: user.username,
+        newUsername: newUsername,
+        password: this.formAdmin.value['password'],
+        privileges: user.privileges.substring(5),
+        studentsDni: dni
+      }
+    }).subscribe(({ data }) => {
+      this.presentToast("Updated correctly!");
+    }, error => {
+      console.log(error);
+    });
   }
 
   async presentToast(message: string) {
@@ -86,6 +85,10 @@ export class UpdateUserInfoPage implements OnInit {
       duration: 2000
     });
     toast.present();
+    //this.router.navigateByUrl('/admin-user', )
+    //this.router.onSameUrlNavigation = 'reload';
+    //this.router.initialNavigation();
+    this.router.navigate(['/user-info']);
   }
 
   async presentAlertUpdatePrivileges(user: Users) {
@@ -115,6 +118,7 @@ export class UpdateUserInfoPage implements OnInit {
         }, {
           text: 'Accept',
           handler: (data) => {
+            this.privileges = data;
             user.privileges = data;
             console.log(data);
 
@@ -124,33 +128,4 @@ export class UpdateUserInfoPage implements OnInit {
     });
     await alert.present();
   }
-
-  async presentAlertUpdatePassword(user: Users) {
-    const alert = await this.alertController.create({
-      header: 'Password: ',
-      message: '<strong>Write the new password.</strong>',
-      inputs: [
-        {
-          name: "newPassword",
-          type: "text",
-          placeholder: "new password..."
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => { }
-        }, {
-          text: 'Accept',
-          handler: (data) => {
-            user.password = data.newPassword;
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
 }

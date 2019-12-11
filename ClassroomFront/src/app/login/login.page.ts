@@ -6,6 +6,7 @@ import { GraphQLModule } from '../graphql.module'
 import { Router } from '@angular/router';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ToastController } from '@ionic/angular';
+import { LocalDBService } from '../services/local-db.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ export class LoginPage implements OnInit {
   login: Boolean;
   formLogin: FormGroup;
 
-  constructor(private apollo: Apollo, private graphQLModule: GraphQLModule, private router: Router, private toastController: ToastController, private formBuilder: FormBuilder) {
+  constructor(private apollo: Apollo, private graphQLModule: GraphQLModule, private router: Router,
+     private toastController: ToastController, private formBuilder: FormBuilder, private localDb: LocalDBService) {
     this.formLogin = this.formBuilder.group({
       username: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(30), Validators.pattern('[a-zA-z]+[0-9]*'), Validators.required])],
       password: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(16), Validators.required])],
@@ -27,6 +29,7 @@ export class LoginPage implements OnInit {
    }
 
   ngOnInit() {
+    //this.localDb.createDB();
   }
 
   async loginUser() {
@@ -47,7 +50,7 @@ export class LoginPage implements OnInit {
 
     query.valueChanges.subscribe(result => {
       isLogin = result.data.login;
-      this.router.navigate(['/home']);
+      this.router.navigate(['tabs/home']);
       this.presentToast(`Welcome ${this.username.toLowerCase()}`);   
       this.formLogin.setValue({
         username: "",

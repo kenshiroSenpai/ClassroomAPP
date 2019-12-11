@@ -3,7 +3,7 @@
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-title>Update User</ion-title>
+      <ion-title>Update: {{user.username}}</ion-title>
     </ion-toolbar>
   </ion-header>
   
@@ -11,16 +11,16 @@
     <ion-list>
       <form [formGroup]="formAdmin">
         <ion-item>
-          <ion-label position="fixed">Username: </ion-label>
-          <ion-input formControlName="username" type="text" [value]="user.username"></ion-input>
+          <ion-label position="fixed">username: </ion-label>
+          <ion-input formControlName="username" type="text"></ion-input>
         </ion-item>
         <ion-item lines="none" class='form-text error'
           *ngIf="!formAdmin.controls.username.valid  && (formAdmin.controls.username.dirty)">
           <p>Please enter a valid username.</p>
         </ion-item>
-        <ion-item (click)="presentAlertUpdatePassword(user)">
-          <ion-label position="fixed">Password: </ion-label>
-          <ion-input formControlName="password" type="password" [value]="user.password.substring(0,10)"></ion-input>
+        <ion-item>
+          <ion-label position="fixed">password: </ion-label>
+          <ion-input formControlName="password" type="password"></ion-input>
         </ion-item>
         <ion-item lines="none" class='form-text error'
           *ngIf="!formAdmin.controls.password.valid  && (formAdmin.controls.password.dirty)">
@@ -28,21 +28,17 @@
         </ion-item>
         <ion-item (click)="presentAlertUpdatePrivileges(user)">
           <ion-label position="fixed">Privileges: </ion-label>
-          <ion-input formControlName="privileges" type="text" [value]="user.privileges" read-only></ion-input>
+          <ion-input formControlName="privileges" type="text" read-only [value]="privileges"></ion-input>
         </ion-item>
-        <ion-item *ngIf="user.studentsDni == null">
+        <ion-item>
           <ion-label position="fixed">dni: </ion-label>
-          <ion-input formControlName="dni" type="text" [value]="empty"></ion-input>
-        </ion-item>
-        <ion-item *ngIf="user.studentsDni != null">
-          <ion-label position="fixed">dni: </ion-label>
-          <ion-input formControlName="dni" type="text" [value]="user.studentsDni.dni"></ion-input>
+          <ion-input formControlName="dni" type="text" [value]=""></ion-input>
         </ion-item>
         <ion-item lines="none" class='form-text error'
           *ngIf="!formAdmin.controls.dni.valid  && (formAdmin.controls.dni.dirty)">
           <p>Please enter a valid dni.</p>
         </ion-item>
-        <ion-button color="tertiary" (click)="updateUser(user, formAdmin.controls.username.value)">UPDATE</ion-button>
+        <ion-button color="tertiary" (click)="updateUser(user, formAdmin.controls.username.value)" [disabled]="!formAdmin.valid">UPDATE</ion-button>
       </form>
     </ion-list>
   </ion-content>

@@ -18,17 +18,18 @@ export class AdminUserPage implements OnInit {
   oldUsername: String;
 
   constructor(private apollo: Apollo, private toastController: ToastController,
-    private alertController: AlertController, private router: Router) {}
+    private alertController: AlertController, private router: Router) { }
 
   ngOnInit() {
     this.loadData();
+    this.loadUsers();
   }
 
   async loadData() {
     if (this.router.getCurrentNavigation().extras.state) {
       this.username = this.router.getCurrentNavigation().extras.state.username;
+      console.log(this.username);
     }
-    this.loadUsers();
   }
 
   async loadUsers() {
@@ -80,9 +81,13 @@ export class AdminUserPage implements OnInit {
     }
   }
 
-  async goToUpdateUserInfo(user:Users){
+  async goToUpdateUserInfo(user: Users) {
+    if (user.username === this.username) {
+      console.log("es el mismo");
+
+    }
     let navigationExtras: NavigationExtras = {
-      state:{
+      state: {
         user: user
       }
     }

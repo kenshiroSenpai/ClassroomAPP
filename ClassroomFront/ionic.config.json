@@ -1,5 +1,7 @@
 {
   "name": "ClassroomFront",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

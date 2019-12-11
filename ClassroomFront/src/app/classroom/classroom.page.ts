@@ -3,6 +3,7 @@ import { Apollo } from 'apollo-angular';
 import { Classroom } from '../interfaces/classroom';
 import { Router, NavigationExtras } from '@angular/router';
 import gql from 'graphql-tag';
+import { LocalDBService } from '../services/local-db.service';
 
 @Component({
   selector: 'app-classroom',
@@ -13,10 +14,27 @@ export class ClassroomPage implements OnInit {
 
   classrooms: Array<Classroom>;
 
-  constructor(private apollo: Apollo, private router: Router) { }
+  constructor(private apollo: Apollo, private router: Router,private localDb: LocalDBService) { }
 
   ngOnInit() {
     this.loadClassroom();
+  }
+
+  async loadLocalClassroom(){
+    this.localDb.insertRow('classroom', this.classrooms)
+  }
+
+  async readClassroom(){
+    this.localDb.getRows('classroom').subscribe(data =>{
+      console.log(data);
+    });
+    //console.log(JSON.stringify(classroomPrueba));
+    //this.readLog(classroomPrueba);
+  }
+
+  async readLog(algo: any){
+    
+    //console.log(JSON.stringify(this.localDb.getRows('classroom')));
   }
 
   async loadClassroom() {
@@ -35,6 +53,8 @@ export class ClassroomPage implements OnInit {
 
     query.valueChanges.subscribe((result) =>{
       this.classrooms = result.data.getAllClassroom;
+      this.localDb.createClassroom();
+      this.loadLocalClassroom();
     },
       error => {
       });

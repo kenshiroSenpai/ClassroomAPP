@@ -31,7 +31,7 @@ export class GraphQLModule {
     this.apollo.removeClient();
     this.apollo.create({
       link: this.httpLink.create({
-        uri: "http://localhost:8080/graphql",
+        uri: "http://192.168.103.87:8080/graphql",
         headers: this.header
       }),
 
@@ -43,7 +43,7 @@ export class GraphQLModule {
     this.apollo.removeClient();
     this.apollo.create({
       link: this.httpLink.create({
-        uri: "http://localhost:8080/graphql"
+        uri: "http://192.168.103.87:8080/graphql"
       }),
 
       cache: new InMemoryCache()
