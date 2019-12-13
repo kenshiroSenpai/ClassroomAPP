@@ -11,8 +11,6 @@ export class LocalDBService {
 
   private database: SQLiteObject;
 
-  rowData: any = [];
-
   constructor(private platform: Platform, private sql: SQLite) {
     this.platform.ready().then(() => {
       this.createDB();
@@ -36,43 +34,64 @@ export class LocalDBService {
   createClassroom() {
     this.database.executeSql('CREATE TABLE IF NOT EXISTS classroom(' +
       'number BIGINT PRIMARY KEY,' +
-      'building VARCHAR(255))', []).then(() => {
+      'building VARCHAR(255) NOT NULL)', []).then(() => {
         console.log("se creo la tabla classroom");
       }).catch(error => {
         console.log("table classroom: " + JSON.stringify(error));
       });
   }
 
-  insertRow(tableName: String, classroomArray: Array<Classroom>) {
-    for (let classroom of classroomArray) {
-      console.log("entro " + JSON.stringify(classroom));
+  insertRows(tableName: string, classroomArray: Array<Classroom>) {
+      for (let classroom of classroomArray) {
+        console.log("entro " + JSON.stringify(classroom));
+        this.database.executeSql('INSERT OR REPLACE INTO ' + tableName + '(number, building) VALUES ("' + classroom.number + '", "' + classroom.building + '")', [])
+          .then(() => {
+            console.log("insertado el valor " + JSON.stringify(classroom) + "en la tabla " + tableName);
+          })
+          .catch(e => {   
+          });
+      }
+  }
 
-      this.database.executeSql('INSERT OR IGNORE INTO ' + tableName + ' VALUES ("' + classroom.number + '", "' + classroom.building + '")', [])
-        .then(() => {
-          console.log("insertado el valor " + JSON.stringify(classroom) + "en la tabla " + tableName);
-        })
-        .catch(e => {
-          alert("error " + JSON.stringify(e))
-        });
-    }
+  insertRow(tableName: String, classroom: Classroom) {
+    this.database.executeSql('INSERT OR REPLACE INTO ' + tableName + ' VALUES ("' + classroom.number + '", "' + classroom.building + '")', [])
+      .then(() => {
+        console.log("insertado el valor " + JSON.stringify(classroom) + "en la tabla " + tableName);
+      })
+      .catch(e => {
+        alert("error " + JSON.stringify(e))
+      });
   }
 
   getRows(tableName: String): Observable<any> {
-    return new Observable(observe =>{
+    let rowData: any = [];
+    console.log("al inicio: " + JSON.stringify(rowData));
+    
+    return new Observable(observe => {
       this.database.executeSql("SELECT * FROM " + tableName, [])
-      .then((res) => {
-        if (res.rows.length > 0) {
-          for (var i = 0; i < res.rows.length; i++) {
-            this.rowData.push(res.rows.item(i));
+        .then((res) => {
+          if (res.rows.length > 0) {
+            for (var i = 0; i < res.rows.length; i++) {
+              rowData.push(res.rows.item(i));
+            }
           }
-        }
-        console.log(JSON.stringify(this.rowData));
-        observe.next(this.rowData);
-        observe.complete();
+          console.log(JSON.stringify(rowData));
+          observe.next(rowData);
+          observe.complete();
+        })
+        .catch(e => {
+          observe.error(JSON.stringify(e));
+        });
+    })
+  }
+
+  deleteRow(tableName: string, item: any) {
+    console.log(item);
+    this.database.executeSql("DELETE FROM " + tableName + " WHERE number = " + item.number, [])
+      .then((res) => {
       })
       .catch(e => {
-        observe.error(JSON.stringify(e));
+        alert("error " + JSON.stringify(e))
       });
-    })
   }
 }

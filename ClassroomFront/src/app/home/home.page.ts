@@ -3,6 +3,8 @@ import { Router, NavigationExtras } from '@angular/router';
 import { GraphQLModule } from '../graphql.module';
 import { Users } from '../interfaces/users';
 import { MenuController } from '@ionic/angular';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
 
 
 @Component({
@@ -13,18 +15,21 @@ import { MenuController } from '@ionic/angular';
 export class HomePage implements OnInit {
 
   userInfo: Users;
+  user: Users;
 
-  constructor(private router: Router, private graphQLModule: GraphQLModule, private menuController: MenuController) { }
+  constructor(private router: Router, private graphQLModule: GraphQLModule,
+    private menuController: MenuController, private apollo: Apollo) { }
 
   ngOnInit() {
   }
 
-  openFirst() { 
-    this.menuController.open('myMenu');
-  }
-
   async goToShowClassroom() {
-    this.router.navigate(['/classroom']);
+    let navigationExtras: NavigationExtras = {
+      state: {
+        userInfo: this.user
+      }
+    }
+    this.router.navigate(['/classroom'], navigationExtras);
   }
 
   async goToMyReserve() {
@@ -53,4 +58,29 @@ export class HomePage implements OnInit {
     this.router.navigate(['/user-info'], navigationExtras);
   }
 
+  async getUser() {
+    this.userInfo = this.graphQLModule.user;
+    const getUser = gql`
+    query getUser($username: ID!){
+      getUser(username: $username){
+          username,
+          password,
+          privileges,
+          studentsDni{
+              dni
+          }
+      }
+  }
+  `;
+    const query = this.apollo.watchQuery<any>({
+      query: getUser,
+      variables: {
+        username: this.userInfo.username
+      }
+    });
+    query.valueChanges.subscribe(data => {
+      this.user = data.data.getUser;
+      this.goToShowClassroom();
+    });
+  }
 }

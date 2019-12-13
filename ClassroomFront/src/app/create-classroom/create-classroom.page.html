@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>createClassroom</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <form [formGroup]="formClassroom">
+      <ion-item>
+        <ion-label position="floating">Number</ion-label>
+        <ion-input type="number" clearInput formControlName="number"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Building</ion-label>
+        <ion-select placeholder="Select One" formControlName="building">
+          <ion-select-option value="Principal">Principal</ion-select-option>
+          <ion-select-option value="Secondary">Secondary</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </form>
+  </ion-list>
+  <ion-button (click)="createClassroom()">CREATE</ion-button>
+</ion-content>

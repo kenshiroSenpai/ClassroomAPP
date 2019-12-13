@@ -42,6 +42,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
+  },
+  {
+    path: 'create-classroom',
+    loadChildren: () => import('./create-classroom/create-classroom.module').then( m => m.CreateClassroomPageModule)
   }
 ];
 

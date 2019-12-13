@@ -7,47 +7,53 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content> 
+  <ion-row class="ion-align-items-start" class="pad">
+    <ion-col>
+      <ion-label position="fixed">Username: </ion-label>
+    </ion-col>
+    <ion-col>{{user.username}}</ion-col>
+  </ion-row>
 
-    <ion-row class="ion-align-items-start" class="pad">
-      <ion-col>
-        <ion-label position="fixed">Username: </ion-label>
-      </ion-col>
-      <ion-col>{{user.username}}</ion-col>
-    </ion-row>
+  <ion-row class="ion-align-items-start" class="pad">
+    <ion-col>
+      <ion-label position="fixed">Password: </ion-label>
+    </ion-col>
+    <ion-col>
+      <ion-input type="password" readonly value="password"></ion-input>
+    </ion-col>
+  </ion-row>
 
-    <ion-row class="ion-align-items-start" class="pad">
-      <ion-col>
-        <ion-label position="fixed">Password: </ion-label>
-      </ion-col>
-      <ion-col>
-        <ion-input type="password" readonly value="password"></ion-input>
-      </ion-col>
-    </ion-row>
+  <ion-row class="ion-align-items-start" class="pad">
+    <ion-col>
+      <ion-label position="fixed">Privileges: </ion-label>
+    </ion-col>
+    <ion-col>{{user.privileges}}</ion-col>
+  </ion-row>
 
-    <ion-row class="ion-align-items-start" class="pad">
-      <ion-col>
-        <ion-label position="fixed">Privileges: </ion-label>
-      </ion-col>
-      <ion-col>{{user.privileges}}</ion-col>
-    </ion-row>
+  <ion-row class="ion-align-items-start" *ngIf="user.studentsDni != null" class="pad">
+    <ion-col>
+      <ion-label position="fixed">DNI: </ion-label>
+    </ion-col>
+    <ion-col>{{user.studentsDni.dni}}</ion-col>
+  </ion-row>
 
-    <ion-row class="ion-align-items-start" *ngIf="user.studentsDni != null" class="pad">
-      <ion-col>
-        <ion-label position="fixed">DNI: </ion-label>
-      </ion-col>
-      <ion-col>{{user.studentsDni.dni}}</ion-col>
-    </ion-row>
+  <ion-row class="ion-align-items-start" *ngIf="user.studentsDni == null" class="pad">
+    <ion-col>
+      <ion-label position="fixed">DNI: </ion-label>
+    </ion-col>
+    <ion-col>empty</ion-col>
+  </ion-row>
 
-    <ion-row class="ion-align-items-start" *ngIf="user.studentsDni == null" class="pad">
-      <ion-col>
-        <ion-label position="fixed">DNI: </ion-label>
-      </ion-col>
-      <ion-col>empty</ion-col>
-    </ion-row>
+  <ion-row *ngIf="user.privileges==='ROLE_ADMIN'">
+    <ion-button id="showUsers" (click)="goToAdminUser()">SHOW USERS</ion-button>
+  </ion-row>
 
-    <ion-row *ngIf="user.privileges==='ROLE_ADMIN'">
-      <ion-button id="showUsers" (click)="goToAdminUser()">SHOW USERS</ion-button>
-    </ion-row>
-    
+  <ion-item>
+    <ion-label>Dark Mode</ion-label>
+    <ion-toggle [(ngModel)]="darkMode" (ionChange)="changeTheme()"></ion-toggle>
+  </ion-item>
+
+  <!-- <ion-button (click)="read()">CHECK</ion-button> -->
+
 </ion-content>

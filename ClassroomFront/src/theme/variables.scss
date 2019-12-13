@@ -75,3 +75,35 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 }
+
+.dark-theme {
+  ion-content {
+    --background: black;
+    --color: white;
+  }
+
+  ion-item {
+    --background: black;
+    --color: white;
+  }
+
+  ion-toolbar {
+    --background: #222428;
+    --color: #f4f5f8;
+  }
+
+  ion-tab-bar {
+    --background: #222428;
+    --color: #f4f5f8;
+  }
+
+  ion-card {
+    --color: white;
+  }
+  ion-card-subtitle {
+    --color: white;
+  }
+  ion-card-title {
+    --color: white;
+  }
+}

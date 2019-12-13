@@ -3,6 +3,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import { Users } from '../interfaces/users';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
+import { CustomThemeService } from '../services/custom-theme.service';
 
 @Component({
   selector: 'app-user-info',
@@ -12,6 +13,8 @@ import { Apollo } from 'apollo-angular';
 export class UserInfoPage implements OnInit {
 
   private username: String;
+  darkMode: string = window.localStorage.getItem('0');
+  myColor: string;
   user: Users = {
     username: "",
     password: "",
@@ -19,10 +22,20 @@ export class UserInfoPage implements OnInit {
     studentsDni: null
   };
 
-  constructor(private router: Router, private apollo: Apollo) { }
-
+  constructor(private router: Router, private apollo: Apollo, private themeService: CustomThemeService) { 
+   }
   async ngOnInit() {
     await this.loadData();
+  }
+
+  async changeTheme() {
+    if (this.darkMode) {
+      window.localStorage.setItem('0', `${this.darkMode}`);
+      this.themeService.darkMode('dark-theme');
+    } else {
+      window.localStorage.setItem('0', `${this.darkMode}`);
+      this.themeService.lightMode('dark-theme');
+    }
   }
 
   async loadData() {
@@ -53,9 +66,10 @@ export class UserInfoPage implements OnInit {
     });
   }
 
-  async goToAdminUser(){;
+  async goToAdminUser() {
+    ;
     let navigationExtras: NavigationExtras = {
-      state:{
+      state: {
         username: this.username
       }
     }

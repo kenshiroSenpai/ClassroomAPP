@@ -6,24 +6,23 @@
   </ion-toolbar>
 </ion-header>
 
-
+<ion-menu side="start" menuId="myMenu" contentId="main">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item (click)="goToLogin()">Log out</ion-item>
+      <ion-item (click)="goToUserInfo()">My Account</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+<ion-router-outlet id="main"></ion-router-outlet>
 
 <ion-content>
-  <ion-menu side="start" menuId="myMenu" contentId="main">
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>Menu</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item (click)="goToLogin()">Log out</ion-item>
-        <ion-item (click)="goToUserInfo()">My Account</ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
-  <ion-router-outlet id="main"></ion-router-outlet>
-  
+
   <div class="ion-padding">
     <ion-grid>
       <ion-row>
@@ -35,7 +34,7 @@
       </ion-row>
       <ion-row class="padButtons">
         <ion-col>
-          <ion-button expand="full" (click)="goToShowClassroom()">Show Classroom</ion-button>
+          <ion-button expand="full" (click)="getUser()">Show Classroom</ion-button>
         </ion-col>
       </ion-row>
       <ion-row class="padButtons">
