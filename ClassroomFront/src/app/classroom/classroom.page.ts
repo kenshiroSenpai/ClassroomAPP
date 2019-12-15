@@ -20,11 +20,11 @@ export class ClassroomPage implements OnInit {
 
   constructor(private apollo: Apollo, private router: Router,
     private localDb: LocalDBService, private alertController: AlertController,
-    private toastController: ToastController) { }
+    private toastController: ToastController) {
+      this.localDb.createClassroom();
+     }
 
   ngOnInit() {
-    console.log("entro");
-    
     this.loadData();
     this.loadClassroom();
   }
@@ -62,7 +62,6 @@ export class ClassroomPage implements OnInit {
 
     query.valueChanges.subscribe((result) => {
       this.classrooms = result.data.getAllClassroom;
-      this.localDb.createClassroom();
       this.loadLocalClassroom();
       this.readClassroom();
     },

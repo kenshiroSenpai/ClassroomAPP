@@ -17,6 +17,7 @@ export class LoginPage implements OnInit {
 
   username: string = "";
   password: string = "";
+  image: string;
   login: Boolean;
   formLogin: FormGroup;
 
@@ -28,15 +29,17 @@ export class LoginPage implements OnInit {
       password: ['', Validators.compose([Validators.minLength(2), Validators.maxLength(16), Validators.required])],
     });
   }
-
   ngOnInit() {
     if (window.localStorage.getItem('0') === 'true') {
       this.themeService.darkMode('dark-theme');
     }
   }
 
-  async loginUser() {
+  ionViewDidEnter() {
+    this.readImage();
+  }
 
+  async loginUser() {
     let isLogin: any;
     this.graphQLModule.user.username = this.getUsername().toLowerCase();
     this.graphQLModule.user.password = this.getPassword();
@@ -65,6 +68,12 @@ export class LoginPage implements OnInit {
         this.presentToast(`Bad username or password, please try again.`);
       });
     return isLogin;
+  }
+
+  async readImage() {
+    this.localDb.readPicture('1').subscribe(result => {
+      this.image = result;
+    });
   }
 
   async registerUser() {

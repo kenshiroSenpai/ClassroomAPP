@@ -46,7 +46,6 @@ export class CreateClassroomPage implements OnInit {
         building: this.getBuilding()
       }
     }).subscribe(({ data }) => {
-      console.log(data.createClassroom);
       this.localDb.insertRow('classroom', data.createClassroom)
       this.router.navigate(['/classroom']);
       this.presentToast(`Your created ${this.getNumber()}` + ` ${this.getBuilding()}`);

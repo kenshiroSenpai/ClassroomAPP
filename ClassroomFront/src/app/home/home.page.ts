@@ -4,6 +4,7 @@ import { GraphQLModule } from '../graphql.module';
 import { Users } from '../interfaces/users';
 import { MenuController } from '@ionic/angular';
 import { Apollo } from 'apollo-angular';
+import { LocalDBService } from '../services/local-db.service';
 import gql from 'graphql-tag';
 
 
@@ -18,7 +19,8 @@ export class HomePage implements OnInit {
   user: Users;
 
   constructor(private router: Router, private graphQLModule: GraphQLModule,
-    private menuController: MenuController, private apollo: Apollo) { }
+    private menuController: MenuController, private apollo: Apollo,
+    private localDb: LocalDBService) { }
 
   ngOnInit() {
   }
