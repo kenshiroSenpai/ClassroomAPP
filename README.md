@@ -23,6 +23,14 @@ the next step would be to open eclipse with the ClassroomBack project and run it
 
 **Important!**, you need change ip in the *_application.properties_* file in ClassroomBack and graphql.module.ts file in ClassroomFront.
 
+# Screenshot
+![alt text](Screenshots/login.png)
+![alt text](Screenshots/home.png)
+![alt text](Screenshots/menu.png)
+![alt text](Screenshots/profile.png)
+![alt text](Screenshots/classrooms.png)
+![alt text](Screenshots/reservation.png)
+
 # Acknowledgments
 Spring:[Spring](https://spring.io/guides)
 
